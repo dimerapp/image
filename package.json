@@ -24,8 +24,7 @@
     "japa-cli": "^1.0.1",
     "mrm": "^1.2.1",
     "pkg-ok": "^2.2.0",
-    "standard": "^11.0.1",
-    "supertest": "^3.1.0"
+    "standard": "^11.0.1"
   },
   "config": {
     "commitizen": {
@@ -43,7 +42,6 @@
     "fs-extra": "^7.0.0",
     "image-size": "^0.6.3",
     "ow": "^0.6.0",
-    "resize-img": "^1.1.2",
-    "serve-static": "^1.13.2"
+    "resize-img": "^1.1.2"
   }
 }

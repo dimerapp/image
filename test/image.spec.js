@@ -12,7 +12,7 @@ const test = require('japa')
 const fs = require('fs-extra')
 const { createHash } = require('crypto')
 
-const Image = require('../src/Image')
+const Image = require('..')
 
 const destPath = join(__dirname, 'dist')
 
