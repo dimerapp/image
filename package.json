@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "Process images in markdown to be served by the API server",
   "main": "index.js",
+  "files": [
+    "index.js"
+  ],
   "scripts": {
     "mrm": "mrm --preset=@adonisjs/mrm-preset",
     "pretest": "npm run lint",
