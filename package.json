@@ -36,5 +36,12 @@
       "test",
       "japaFile.js"
     ]
+  },
+  "dependencies": {
+    "@dimerapp/utils": "^1.0.3",
+    "fs-extra": "^7.0.0",
+    "image-size": "^0.6.3",
+    "ow": "^0.6.0",
+    "resize-img": "^1.1.2"
   }
 }
