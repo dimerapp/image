@@ -122,4 +122,20 @@ test.group('Image', (group) => {
     assert.isTrue(fileExists)
     assert.isFalse(thumbExists)
   })
+
+  test('return dimer node for image with thumb', async (assert) => {
+    const img = new Image(destPath)
+    const { filename, dimensions, thumb } = await img.move('../logo-beta.png', __dirname)
+
+    assert.deepEqual(img.toDimerNode({ filename, dimensions, thumb }, 'https://api.dimerapp.com'), {
+      url: `https://api.dimerapp.com/__assets/${thumb}`,
+      data: {
+        hProperties: {
+          dataSrc: `https://api.dimerapp.com/__assets/${filename}`,
+          width: dimensions.width,
+          height: dimensions.height
+        }
+      }
+    })
+  })
 })

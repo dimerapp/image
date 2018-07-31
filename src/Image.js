@@ -150,6 +150,37 @@ class Image {
   }
 
   /**
+   * Returns the node to patch image node detected in markdown
+   *
+   * @method toDimerNode
+   *
+   * @param  {Object}    imageResponse
+   * @param  {String}    assetsUrl
+   *
+   * @return {Object}
+   */
+  toDimerNode (imageResponse, assetsUrl) {
+    ow(imageResponse, ow.object.label('imageResponse').hasKeys('filename', 'dimensions', 'thumb'))
+    ow(assetsUrl, ow.string.label('assetsUrl').nonEmpty)
+    ow(imageResponse.filename, ow.string.label('imageResponse.filename').nonEmpty)
+
+    const baseUrl = `${assetsUrl}/${this.paths.assetsPathRef}`
+    const url = imageResponse.thumb ? `${baseUrl}/${imageResponse.thumb}` : `${baseUrl}/${imageResponse.filename}`
+    const lazyUrl = imageResponse.thumb ? `${baseUrl}/${imageResponse.filename}` : null
+
+    return {
+      url: url,
+      data: {
+        hProperties: {
+          dataSrc: lazyUrl,
+          width: imageResponse.dimensions.width,
+          height: imageResponse.dimensions.height
+        }
+      }
+    }
+  }
+
+  /**
    * Cleans the assets directory
    *
    * @method clean
