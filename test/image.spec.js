@@ -153,4 +153,33 @@ test.group('Image', (group) => {
       }
     })
   })
+
+  test('return dimer node for image without thumb', async (assert) => {
+    const img = new Image(ctx)
+    const { filename, dimensions, thumb } = await img.move('../logo-beta.svg', __dirname)
+
+    assert.deepEqual(img.toDimerNode({ filename, dimensions, thumb }), {
+      url: `https://api.dimerapp.com/__assets/${filename}`,
+      data: {
+        hProperties: {
+          dataSrc: null,
+          width: dimensions.width,
+          height: dimensions.height
+        }
+      }
+    })
+  })
+
+  test('clear assets directory', async (assert) => {
+    const img = new Image(ctx)
+    await fs.copy(join(__dirname, '../logo-beta.svg'), join(ctx.get('paths').assetsPath(), 'logo-beta.svg'))
+
+    let exists = await fs.exists(join(ctx.get('paths').assetsPath(), 'logo-beta.svg'))
+    assert.isTrue(exists)
+
+    await img.clean()
+
+    exists = await fs.exists(join(ctx.get('paths').assetsPath(), 'logo-beta.svg'))
+    assert.isFalse(exists)
+  })
 })
