@@ -46,9 +46,16 @@ yarn add @dimerapp/image
 
 ```js
 const Markdown = require('@dimerapp/markdown')
-const { dirname } = require('path')
+const Context = require('@dimerapp/context')
 
-const img = new Image(basePath)
+const ctx = new Context(__dirname)
+
+// This must be done by parsing the config file
+ctx.set('lib', 'config', {
+  compilerOptions: {}
+})
+
+const img = new Image(ctx)
 
 const markdown = new Markdown(contents, {
   onUrl: function (url) {
