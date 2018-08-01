@@ -131,22 +131,23 @@ class Image {
 
     const absPath = resolve(referencedPath, relativePath)
 
-    if (!this._processedFiles.has(absPath)) {
-      const buff = await fs.readFile(absPath)
-      const hash = this._getHash(buff)
-      const size = Buffer.byteLength(hash)
-      const ext = extname(relativePath)
-      const filename = `${hash}${ext}`
-      const thumb = this._thumbs.indexOf(ext) > -1 ? `${hash}-thumb${ext}` : null
-      const { width, height } = await sizeOf(buff)
-
-      await this._writeBuff(buff, filename)
-      await this._generateThumb(buff, thumb)
-
-      this._processedFiles.set(absPath, { size, filename, dimensions: { width, height }, thumb })
+    if (this._processedFiles.has(absPath)) {
+      return Object.assign({ cache: true }, this._processedFiles.get(absPath))
     }
 
-    return this._processedFiles.get(absPath)
+    const buff = await fs.readFile(absPath)
+    const hash = this._getHash(buff)
+    const size = Buffer.byteLength(hash)
+    const ext = extname(relativePath)
+    const filename = `${hash}${ext}`
+    const thumb = this._thumbs.indexOf(ext) > -1 ? `${hash}-thumb${ext}` : null
+    const { width, height } = await sizeOf(buff)
+
+    await this._writeBuff(buff, filename)
+    await this._generateThumb(buff, thumb)
+
+    this._processedFiles.set(absPath, { size, filename, dimensions: { width, height }, thumb })
+    return Object.assign({ cache: false }, this._processedFiles.get(absPath))
   }
 
   /**
