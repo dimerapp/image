@@ -57,7 +57,8 @@ test.group('Image', (group) => {
 
   test('do not move file if already exists', async (assert) => {
     const img = new Image(destPath)
-    const { filename } = await img.move('../logo-beta.svg', __dirname)
+    const { filename, cache } = await img.move('../logo-beta.svg', __dirname)
+    assert.isFalse(cache)
 
     const exists = await fs.exists(join(destPath, 'dist', '__assets', filename))
     assert.isTrue(exists)
@@ -66,7 +67,8 @@ test.group('Image', (group) => {
       throw new Error('Didn\'t expected to be invoked')
     }
 
-    await img.move('../logo-beta.svg', __dirname)
+    const { cache: reCache } = await img.move('../logo-beta.svg', __dirname)
+    assert.isTrue(reCache)
   })
 
   test('do not move file if already exists on disk and not in mem cache', async (assert) => {

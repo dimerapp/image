@@ -1,6 +1,6 @@
 {
   "name": "@dimerapp/image",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Process images in markdown to be served by the API server",
   "main": "index.js",
   "files": [
