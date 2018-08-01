@@ -1,3 +1,13 @@
+<a name="1.0.1"></a>
+## [1.0.1](https://github.com/dimerapp/image/compare/v1.0.0...v1.0.1) (2018-08-01)
+
+
+### Features
+
+* return cache flag to tell if file was processed earlier ([7b00e4d](https://github.com/dimerapp/image/commit/7b00e4d))
+
+
+
 <a name="1.0.0"></a>
 # 1.0.0 (2018-07-31)
 
