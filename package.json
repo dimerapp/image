@@ -1,6 +1,6 @@
 {
   "name": "@dimerapp/image",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Process images in markdown to be served by the API server",
   "main": "index.js",
   "files": [
@@ -21,6 +21,7 @@
   "license": "MIT",
   "devDependencies": {
     "@adonisjs/mrm-preset": "^1.0.10",
+    "@dimerapp/context": "^1.0.1",
     "commitizen": "^2.10.1",
     "cz-conventional-changelog": "^2.1.0",
     "japa": "^1.0.6",
@@ -41,7 +42,6 @@
     ]
   },
   "dependencies": {
-    "@dimerapp/utils": "^1.0.3",
     "fs-extra": "^7.0.0",
     "image-size": "^0.6.3",
     "ow": "^0.6.0",

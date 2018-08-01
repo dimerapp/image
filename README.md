@@ -16,7 +16,11 @@
 </div>
 
 # Dimer Image
-> Handle images detected inside markdown and process them to be server via HTTP server
+> Handle images detected inside markdown and process them to be served via HTTP server
+
+[![travis-image]][travis-url]
+[![appveyor-image]][appveyor-url]
+[![npm-image]][npm-url]
 
 [@dimerapp/markdown](https://npm.im/@dimerapp/markdown) can detect assets (aka images) inside the Markdown documents. This package can be used to process those images and serve them via HTTP server.
 
@@ -28,7 +32,7 @@ Let's start with the example markdown document and understand the flow on how im
 This is an image reference ![](../images/dropdown.png)
 ```
 
-1. The image `../images/dropdown.png` will be converted a buffer and moved inside `dist/__assets` folder.
+1. The image `../images/dropdown.png` will be converted to a buffer and moved inside `dist/__assets` folder.
 2. During `move` operation, a HASH of file contents will be generated to avoid duplicate files.
 3. A thumbnail for `jpg` and `png` images is generated to render blur images and load actual image in background (has to be handled on Frontend).
 
@@ -41,14 +45,20 @@ npm i @dimerapp/image
 yarn add @dimerapp/image
 ```
 
-
 ## Usage
 
 ```js
 const Markdown = require('@dimerapp/markdown')
-const { dirname } = require('path')
+const Context = require('@dimerapp/context')
 
-const img = new Image(basePath)
+const ctx = new Context(__dirname)
+
+// This must be done by parsing the config file
+ctx.set('lib', 'config', {
+  compilerOptions: {}
+})
+
+const img = new Image(ctx)
 
 const markdown = new Markdown(contents, {
   onUrl: function (url) {
@@ -60,10 +70,6 @@ const markdown = new Markdown(contents, {
   }
 })
 ```
-
-[![travis-image]][travis-url]
-[![appveyor-image]][appveyor-url]
-[![npm-image]][npm-url]
 
 ## Change log
 

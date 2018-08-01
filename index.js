@@ -13,7 +13,6 @@ const ow = require('ow')
 const fs = require('fs-extra')
 const sizeOf = require('image-size')
 const resizeImg = require('resize-img')
-const { paths } = require('@dimerapp/utils')
 
 /**
  * Process the image detected inside markdown, by computing
@@ -25,16 +24,26 @@ const { paths } = require('@dimerapp/utils')
  * @param {Object} options
  */
 class Image {
-  constructor (basePath, options) {
-    ow(basePath, ow.string.label('basePath').nonEmpty)
-    this.paths = paths(basePath)
+  constructor (ctx) {
+    this.ctx = ctx
+    this.paths = ctx.get('paths')
+    this.compilerOptions = ctx.get('config').compilerOptions
 
-    this.options = Object.assign({
-      generateThumbs: true,
-      allowedExtensions: [ '.png', '.jpg', '.svg', '.jpeg' ]
-    }, options)
+    /**
+     * Array of allowed extensions.
+     */
+    this._allowedExtensions = [ '.png', '.jpg', '.svg', '.jpeg' ]
 
-    this._thumbs = this.options.generateThumbs ? ['.jpg', '.png'] : []
+    /**
+     * Whether or not to generate thumbnails
+     */
+    this._thumbs = this.compilerOptions.generateThumbs !== false ? ['.jpg', '.png'] : []
+
+    /**
+     * A map of files already processed
+     *
+     * @type {Map}
+     */
     this._processedFiles = new Map()
   }
 
@@ -109,7 +118,7 @@ class Image {
     ow(relativePath, ow.string.label('relativePath').nonEmpty)
 
     const ext = extname(relativePath)
-    return this.options.allowedExtensions.indexOf(ext) > -1
+    return this._allowedExtensions.indexOf(ext) > -1
   }
 
   /**
@@ -131,22 +140,39 @@ class Image {
 
     const absPath = resolve(referencedPath, relativePath)
 
+    /**
+     * if file has already been processed, then do not move it
+     */
     if (this._processedFiles.has(absPath)) {
       return Object.assign({ cache: true }, this._processedFiles.get(absPath))
     }
 
+    /**
+     * Compute file buffer, size, ext, filename, dimensions and hash
+     */
     const buff = await fs.readFile(absPath)
     const hash = this._getHash(buff)
     const size = Buffer.byteLength(hash)
     const ext = extname(relativePath)
     const filename = `${hash}${ext}`
-    const thumb = this._thumbs.indexOf(ext) > -1 ? `${hash}-thumb${ext}` : null
     const { width, height } = await sizeOf(buff)
 
+    /**
+     * Write the actual file
+     */
     await this._writeBuff(buff, filename)
+
+    /**
+     * Generate thumbnail if required
+     */
+    const thumb = this._thumbs.indexOf(ext) > -1 ? `${hash}-thumb${ext}` : null
     await this._generateThumb(buff, thumb)
 
+    /**
+     * Update cache
+     */
     this._processedFiles.set(absPath, { size, filename, dimensions: { width, height }, thumb })
+
     return Object.assign({ cache: false }, this._processedFiles.get(absPath))
   }
 
@@ -156,26 +182,24 @@ class Image {
    * @method toDimerNode
    *
    * @param  {Object}    imageResponse
-   * @param  {String}    assetsUrl
    *
    * @return {Object}
    */
-  toDimerNode (imageResponse, assetsUrl) {
-    ow(imageResponse, ow.object.label('imageResponse').hasKeys('filename', 'dimensions', 'thumb'))
-    ow(assetsUrl, ow.string.label('assetsUrl').nonEmpty)
-    ow(imageResponse.filename, ow.string.label('imageResponse.filename').nonEmpty)
+  toDimerNode (response) {
+    ow(response, ow.object.label('response').hasKeys('filename', 'dimensions', 'thumb'))
+    ow(response.filename, ow.string.label('response.filename').nonEmpty)
 
-    const baseUrl = `${assetsUrl}/${this.paths.assetsPathRef}`
-    const url = imageResponse.thumb ? `${baseUrl}/${imageResponse.thumb}` : `${baseUrl}/${imageResponse.filename}`
-    const lazyUrl = imageResponse.thumb ? `${baseUrl}/${imageResponse.filename}` : null
+    const assetsUrl = this.compilerOptions.assetsUrl
+    const url = response.thumb ? `${assetsUrl}/${response.thumb}` : `${assetsUrl}/${response.filename}`
+    const lazyUrl = response.thumb ? `${assetsUrl}/${response.filename}` : null
 
     return {
       url: url,
       data: {
         hProperties: {
           dataSrc: lazyUrl,
-          width: imageResponse.dimensions.width,
-          height: imageResponse.dimensions.height
+          width: response.dimensions.width,
+          height: response.dimensions.height
         }
       }
     }
