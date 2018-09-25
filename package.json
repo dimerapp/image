@@ -9,9 +9,9 @@
   "scripts": {
     "mrm": "mrm --preset=@adonisjs/mrm-preset",
     "pretest": "npm run lint",
-    "test": "japa",
+    "test": "npm run test:win",
     "commit": "git-cz",
-    "test:win": "node ./node_modules/japa-cli/index.js",
+    "test:win": "node japaFile.js",
     "lint": "standard"
   },
   "keywords": [
@@ -20,15 +20,14 @@
   "author": "virk",
   "license": "MIT",
   "devDependencies": {
-    "@adonisjs/mrm-preset": "^1.0.10",
-    "@dimerapp/context": "^1.0.1",
+    "@adonisjs/mrm-preset": "^1.0.11",
+    "@dimerapp/context": "^2.0.0",
     "commitizen": "^2.10.1",
     "cz-conventional-changelog": "^2.1.0",
-    "japa": "^1.0.6",
-    "japa-cli": "^1.0.1",
+    "japa": "^2.0.1",
     "mrm": "^1.2.1",
     "pkg-ok": "^2.2.0",
-    "standard": "^11.0.1"
+    "standard": "^12.0.1"
   },
   "config": {
     "commitizen": {
