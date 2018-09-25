@@ -1,3 +1,13 @@
+<a name="1.0.3"></a>
+## [1.0.3](https://github.com/dimerapp/image/compare/v1.0.2...v1.0.3) (2018-09-25)
+
+
+### Bug Fixes
+
+* **size:** return image buffer size and not hash size ([4b5af8e](https://github.com/dimerapp/image/commit/4b5af8e))
+
+
+
 <a name="1.0.2"></a>
 ## [1.0.2](https://github.com/dimerapp/image/compare/v1.0.1...v1.0.2) (2018-08-01)
 

@@ -42,11 +42,12 @@ test.group('Image', (group) => {
     const img = new Image(ctx)
     const { size, filename, dimensions, thumb } = await img.move('../logo-beta.svg', __dirname)
 
-    const buff = createHash('sha1').update(fs.readFileSync(join(__dirname, '../logo-beta.svg'))).digest('hex')
+    const buff = fs.readFileSync(join(__dirname, '../logo-beta.svg'))
+    const hash = createHash('sha1').update(buff).digest('hex')
 
     assert.deepEqual(dimensions, { width: 118, height: 32 })
     assert.isNull(thumb)
-    assert.equal(filename, `${buff}.svg`)
+    assert.equal(filename, `${hash}.svg`)
     assert.equal(size, Buffer.byteLength(buff))
   })
 
@@ -99,11 +100,12 @@ test.group('Image', (group) => {
     const img = new Image(ctx)
     const { size, filename, dimensions, thumb } = await img.move('../logo-beta.png', __dirname)
 
-    const buff = createHash('sha1').update(fs.readFileSync(join(__dirname, '../logo-beta.png'))).digest('hex')
+    const buff = fs.readFileSync(join(__dirname, '../logo-beta.png'))
+    const hash = createHash('sha1').update(buff).digest('hex')
 
     assert.deepEqual(dimensions, { width: 118, height: 32 })
-    assert.equal(filename, `${buff}.png`)
-    assert.equal(thumb, `${buff}-thumb.png`)
+    assert.equal(filename, `${hash}.png`)
+    assert.equal(thumb, `${hash}-thumb.png`)
     assert.equal(size, Buffer.byteLength(buff))
 
     const fileExists = await fs.exists(join(basePath, 'dist', '__assets', filename))
@@ -124,10 +126,12 @@ test.group('Image', (group) => {
     const img = new Image(ctx)
 
     const { size, filename, dimensions, thumb } = await img.move('../logo-beta.png', __dirname)
-    const buff = createHash('sha1').update(fs.readFileSync(join(__dirname, '../logo-beta.png'))).digest('hex')
+
+    const buff = fs.readFileSync(join(__dirname, '../logo-beta.png'))
+    const hash = createHash('sha1').update(buff).digest('hex')
 
     assert.deepEqual(dimensions, { width: 118, height: 32 })
-    assert.equal(filename, `${buff}.png`)
+    assert.equal(filename, `${hash}.png`)
     assert.isNull(thumb)
     assert.equal(size, Buffer.byteLength(buff))
 
