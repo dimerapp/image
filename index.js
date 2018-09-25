@@ -152,7 +152,7 @@ class Image {
      */
     const buff = await fs.readFile(absPath)
     const hash = this._getHash(buff)
-    const size = Buffer.byteLength(hash)
+    const size = Buffer.byteLength(buff)
     const ext = extname(relativePath)
     const filename = `${hash}${ext}`
     const { width, height } = await sizeOf(buff)
